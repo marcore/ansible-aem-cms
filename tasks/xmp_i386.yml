@@ -27,12 +27,19 @@
 
   when: ansible_os_family == "Debian"
 
-- name: Install i386 XMPFilesProcessor dependencies
-  yum:
-    name: "{{ item }}"
-    state: present
-    update_cache: True
-  with_items:
-   # - "compat-libstdc++-33.i686"
-    - "libuuid.i686"
-  when: ansible_os_family == "RedHat"
+- block:
+  - name: Update  64 libs
+    yum:
+      name: libuuid
+      state: latest
+      update_cache: True
+      
+  - name: Install i386 XMPFilesProcessor dependencies
+    yum:
+      name: "{{ item }}"
+      state: present
+      update_cache: True
+    with_items:
+     # - "compat-libstdc++-33.i686"
+      - "libuuid.i686"
+    when: ansible_os_family == "RedHat"
